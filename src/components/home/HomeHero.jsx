@@ -10,12 +10,12 @@ const HomeHero = () => {
           Transform Your Business Today
         </h1>
 
-        <p className="text-center text-lg text-white/90 pt-5">
+        <p className="text-center text-lg text-white/90 pt-5 md:mb-2">
           Expert consulting services to help your business thrive in the digital
           age
         </p>
 
-        <button className="w-40 h-13 bg-white text-blue-700 font-bold py-2 px-6 rounded hover:bg-blue-100 transition duration-300">
+        <button className="w-40 h-13 bg-white text-blue-700 font-bold py-2 px-6 rounded hover:bg-blue-100 transition md:mb-2 duration-300">
           Get Started
         </button>
       </div>
