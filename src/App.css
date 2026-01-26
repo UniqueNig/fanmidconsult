@@ -1,42 +1,20 @@
 @import "tailwindcss";
 
-* {
+/* 👇 THIS ENABLES dark: VARIANT */
+@custom-variant dark (&:where(.dark, .dark *));
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Montserrat", sans-serif;
-}
-
-:root {
-  --bg: #ffffff;
-  --text: #1f2937;
-  --nav-text: #374151;
-  --brand: #2563eb;
-  --nav-bg: #ffffff;
-  --border: #e5e7eb;
-  --icon-bg: #f3f4f6;
-  --card: #f1f5f9;
-}
-
-[data-theme="dark"] {
-  --bg: #0f172a;
-  --text: #e5e7eb;
-  --nav-text: #cbd5f5;
-  --brand: #60a5fa;
-  --nav-bg: #020617;
-  --border: #1e293b;
-  --icon-bg: #1e293b;
-  --card: #1e293b;
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  font-family: "Montserrat", sans-serif;
 }
 
-.card {
-  background-color: var(--card);
+html {
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }

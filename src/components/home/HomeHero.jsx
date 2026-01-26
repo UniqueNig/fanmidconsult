@@ -4,7 +4,7 @@ const HomeHero = () => {
   return (
     <>
       <div
-        className="mx-auto px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 pt-6 md:pt-10 gap-8"
+       className="mx-auto px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 gap-0 md:gap-7"
       >
         <h1 className="text-5xl font-bold text-center text-white">
           Transform Your Business Today

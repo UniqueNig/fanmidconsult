@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-const ThemeContext = createContext();
+const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light");
@@ -21,7 +21,13 @@ export const ThemeProvider = ({ children }) => {
 
   // Apply theme to <html> + persist
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+    // if (theme === "dark") {
+    //   document.documentElement.classList.add("dark");
+    // } else {
+    //   document.documentElement.classList.remove("dark");
+    // }
+     document.documentElement.classList.toggle("dark", theme === "dark");
+
     localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -36,4 +42,15 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-export default ThemeContext;
+/* 👇 Custom Hook */
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw new Error("useTheme must be used inside ThemeProvider");
+  }
+
+  return context;
+};
+
+// export default ThemeContext;
