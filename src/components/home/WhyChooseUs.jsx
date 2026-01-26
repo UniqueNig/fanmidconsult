@@ -66,7 +66,7 @@ const WhyChooseUs = () => {
               <div className="flex justify-center mb-4">
                 <item.icon className="text-blue-600" size={35} />
               </div>
-              <h3 className="font-semibold text-xl">{item.title}</h3>
+              <h3 className="font-semibold text-xl  dark:text-white">{item.title}</h3>
               <p className="text-gray-500 dark:text-gray-300">
                 {item.description}
               </p>
