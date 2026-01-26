@@ -7,11 +7,10 @@ import Footer from "../components/footer/Footer";
 const Home = () => {
   return (
     <>
-    <Navbar/>
-    <HomeHero/>
-    <WhyChooseUs/>
-      <div>This is home page</div>
-      <Footer/>
+      <Navbar />
+      <HomeHero />
+      <WhyChooseUs />
+      <Footer />
     </>
   );
 };
