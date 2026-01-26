@@ -64,6 +64,12 @@ const Footer = () => {
                 </div>
               </div>
             </div>
+            <div className="border-t border-gray-700 pt-6 text-center text-gray-400 dark:text-gray-300"></div>
+            <div className="text-center text-gray-400 dark:text-gray-300 py-4">
+              {" "}
+              &copy; {new Date().getFullYear()} FanMid Consult. All rights
+              reserved.
+            </div>
           </div>
         </footer>
       </div>
