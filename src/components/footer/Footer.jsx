@@ -63,6 +63,7 @@ const Footer = () => {
                   <Phone className="text-white" size={17} /> +234 (813) 487-9924
                 </div>
               </div>
+              
             </div>
             <div className="border-t border-gray-700 pt-6 text-center text-gray-400 dark:text-gray-300"></div>
             <div className="text-center text-gray-400 dark:text-gray-300 py-4">

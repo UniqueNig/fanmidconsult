@@ -4,13 +4,13 @@ const HomeHero = () => {
   return (
     <>
       <div
-       className="mx-auto px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 gap-0 md:gap-7"
+       className="mx-auto min-h-[410px] px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 gap-0 md:gap-7"
       >
         <h1 className="text-5xl font-bold text-center text-white">
           Transform Your Business Today
         </h1>
 
-        <p className="text-center text-lg text-white/90 pt-5 md:mb-2">
+        <p className="text-center text-lg text-white/90 md:mb-2">
           Expert consulting services to help your business thrive in the digital
           age
         </p>

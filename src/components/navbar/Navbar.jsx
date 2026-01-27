@@ -22,11 +22,11 @@ const Navbar = () => {
                 border-gray-200 dark:border-slate-700"
     >
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-18">
           {/* Logo */}
           <Link to="/" className="ml-5">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              ConsultPro
+              FanMidTech Consult
             </h1>
           </Link>
 
