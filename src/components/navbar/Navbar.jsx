@@ -26,7 +26,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="ml-5">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              FanMidTech Consult
+              FanMid Consult
             </h1>
           </Link>
 
