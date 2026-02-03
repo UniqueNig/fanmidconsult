@@ -8,7 +8,6 @@ const Services = () => {
     <>
       <Navbar />
       <ServiceCard />
-      <div>Services</div>
       <Footer />
     </>
   );
