@@ -6,6 +6,7 @@ import { createAppointment } from "../../services/api";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   let navigate = useNavigate();
   const services = [
     { id: 1, name: "General Consultation" },
@@ -28,9 +29,17 @@ const AppointmentForm = () => {
       appointmentdate: "",
       timeslot: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
-      navigate("/booking-successfull");
+      // navigate("/booking-successfull");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(true);
+        resetForm();
+        setIsLoading(false);
+
+         setTimeout(() => setSuccess(false), 9000);
+      }, 800);
       // createAppointment(values)
       //   .then(() => {
       //     navigate("/success");
@@ -79,6 +88,13 @@ const AppointmentForm = () => {
           >
             Book Your Appointment
           </h2>
+
+          {success && (
+            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
+              Appointment submitted successfully 🎉
+            </div>
+          )}
+
           <form onSubmit={submitForm.handleSubmit}>
             <div className="space-y-6">
               <div>
@@ -90,6 +106,7 @@ const AppointmentForm = () => {
                 <input
                   type="text"
                   name="fullname"
+                  value={submitForm.values.fullname} 
                   className={`${base} ${
                     submitForm.touched.fullname && submitForm.errors.fullname
                       ? invalid
@@ -115,6 +132,7 @@ const AppointmentForm = () => {
                 <input
                   type="email"
                   name="email"
+                  value={submitForm.values.email} 
                   className={`${base} ${
                     submitForm.touched.email && submitForm.errors.email
                       ? invalid
@@ -142,6 +160,7 @@ const AppointmentForm = () => {
                   defaultValue=""
                   onChange={submitForm.handleChange}
                   onBlur={submitForm.handleBlur}
+                  value={submitForm.values.service} 
                   name="service"
                   className={`${base} ${
                     submitForm.touched.service && submitForm.errors.service
@@ -175,6 +194,7 @@ const AppointmentForm = () => {
                 <input
                   onChange={submitForm.handleChange}
                   onBlur={submitForm.handleBlur}
+                  value={submitForm.values.appointmentdate} 
                   type="date"
                   name="appointmentdate"
                   min={new Date().toISOString().split("T")[0]}
@@ -204,6 +224,7 @@ const AppointmentForm = () => {
                   defaultValue=""
                   onChange={submitForm.handleChange}
                   onBlur={submitForm.handleBlur}
+                  value={submitForm.values.timeslot} 
                   name="timeslot"
                   className={`${base} ${
                     submitForm.touched.timeslot && submitForm.errors.timeslot
