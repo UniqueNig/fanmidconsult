@@ -6,19 +6,39 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import BookAppointment from "./pages/BookAppointment";
+import Success from "./pages/Success";
 
 const App = () => {
   return (
     <>
       <Routes>
         {/* Wildcard Route */}
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route
+          path="*"
+          element={
+            <>
+              {" "}
+              <div className="text-red-600 font-bold mt-5 text-4xl text-center">
+                404 Not Found
+              </div>
+              <div className="text-center mt-4">
+                <button
+                  onClick={() => navigate("/")}
+                  className="bg-blue-600 text-white px-6 text-center py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Back Home
+                </button>{" "}
+              </div>
+            </>
+          }
+        />
 
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/booking-successfull" element={<Success />} />
       </Routes>
     </>
   );
