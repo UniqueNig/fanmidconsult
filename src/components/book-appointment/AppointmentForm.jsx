@@ -2,13 +2,13 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createAppointment } from "../../services/api";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   let navigate = useNavigate();
+
   const services = [
     { id: 1, name: "General Consultation" },
     { id: 2, name: "Specialist Consultation" },
@@ -32,236 +32,160 @@ const AppointmentForm = () => {
     },
     onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
-      // navigate("/booking-successfull");
-      setSuccess(true);
+
       setTimeout(() => {
         setSuccess(true);
         resetForm();
         setIsLoading(false);
 
-         setTimeout(() => setSuccess(false), 3000);
+        setTimeout(() => setSuccess(false), 3000);
       }, 800);
-      // createAppointment(values)
-      //   .then(() => {
-      //     navigate("/success");
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   })
-      //   .finally(() => {
-      //     setIsLoading(false);
-      //   });
     },
 
     validationSchema: yup.object({
-      fullname: yup
-        .string()
-        .required("Name is required")
-        .min(3, "Name is too short"),
-      email: yup
-        .string()
-        .required("Email is required")
-        .email("Invalid Email Address"),
-      service: yup.string().required("Service is required"),
-      appointmentdate: yup.string().required("Date is required"),
-      timeslot: yup.string().required("Timeslot is required"),
+      fullname: yup.string().required("Name is required").min(3),
+      email: yup.string().required("Email is required").email(),
+      service: yup.string().required(),
+      appointmentdate: yup.string().required(),
+      timeslot: yup.string().required(),
     }),
   });
 
+  /* 🎨 Dark mode friendly styles */
   const base =
-    "w-full px-4 py-2 border rounded-lg outline-none text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white";
+    "w-full px-4 py-2 border rounded-lg outline-none transition text-gray-900 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 " +
+    "dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:focus:ring-blue-400";
 
-  const valid = "border-gray-300 focus:ring-2 focus:ring-blue-500 bg-white";
-  const invalid = "border-red-500 focus:ring-2 focus:ring-red-500 bg-red-50";
+  const invalid =
+    "border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-900/30 dark:border-red-500";
+
   return (
-    <>
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        <button
-          onClick={() => navigate("/services")}
-          className="text-blue-600 hover:text-blue-700 mb-4"
-        >
-          ← Back to Services
-        </button>
+    <div className="max-w-2xl mx-auto px-4 py-12">
+      <button
+        onClick={() => navigate("/services")}
+        className="text-blue-600 dark:text-blue-400 hover:underline mb-4"
+      >
+        ← Back to Services
+      </button>
 
-        <div className="dark:text-white text-gray-800 rounded-lg shadow-md p-8">
-          <h2
-            className={`text-3xl font-bold mb-6 dark:text-white text-gray-800 `}
-          >
-            Book Your Appointment
-          </h2>
+      {/* Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl shadow-lg p-8 
+                   bg-white text-gray-800
+                   dark:bg-slate-900 dark:text-white"
+      >
+        <h2 className="text-3xl font-bold mb-6">Book Your Appointment</h2>
 
+        {/* Success message */}
+        <AnimatePresence>
           {success && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mb-4 p-3 rounded-lg text-sm
+                         bg-green-100 text-green-700
+                         dark:bg-green-900/40 dark:text-green-300"
+            >
               Appointment submitted successfully 🎉
-            </div>
+            </motion.div>
           )}
+        </AnimatePresence>
 
-          <form onSubmit={submitForm.handleSubmit}>
-            <div className="space-y-6">
-              <div>
-                <label
-                  className={`block font-medium mb-2 text-gray-700 dark:text-gray-700 `}
-                >
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="fullname"
-                  value={submitForm.values.fullname} 
-                  className={`${base} ${
-                    submitForm.touched.fullname && submitForm.errors.fullname
-                      ? invalid
-                      : valid
-                  }`}
-                  placeholder="Enter your full name"
-                  onChange={submitForm.handleChange}
-                  onBlur={submitForm.handleBlur}
-                />
-                {submitForm.touched.fullname && submitForm.errors.fullname && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {submitForm.errors.fullname}
-                  </p>
-                )}
-              </div>
+        <form onSubmit={submitForm.handleSubmit}>
+          <div className="space-y-6">
+            {/* Fullname */}
+            <div>
+              <label className="block font-medium mb-2">
+                Full Name <span className="text-red-500">*</span>
+              </label>
 
-              <div>
-                <label
-                  className={`block font-medium mb-2 text-gray-700 dark:text-gray-700`}
-                >
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={submitForm.values.email} 
-                  className={`${base} ${
-                    submitForm.touched.email && submitForm.errors.email
-                      ? invalid
-                      : valid
-                  }`}
-                  placeholder="your.email@example.com"
-                  onChange={submitForm.handleChange}
-                  onBlur={submitForm.handleBlur}
-                />
-
-                {submitForm.touched.email && submitForm.errors.email && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {submitForm.errors.email}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  className={`block font-medium mb-2 dark:text-gray-700 text-gray-700`}
-                >
-                  Service <span className="text-red-500">*</span>
-                </label>
-                <select
-                  defaultValue=""
-                  onChange={submitForm.handleChange}
-                  onBlur={submitForm.handleBlur}
-                  value={submitForm.values.service} 
-                  name="service"
-                  className={`${base} ${
-                    submitForm.touched.service && submitForm.errors.service
-                      ? invalid
-                      : valid
-                  }`}
-                >
-                  <option value="" disabled>
-                    Select a service
-                  </option>
-                  {services.map((service) => (
-                    <option key={service.id} value={service.name}>
-                      {service.name}
-                    </option>
-                  ))}
-                </select>
-
-                {submitForm.touched.service && submitForm.errors.service && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {submitForm.errors.service}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  className={`block font-medium mb-2 text-gray-700 dark:text-gray-700`}
-                >
-                  Appointment Date <span className="text-red-500">*</span>
-                </label>
-                <input
-                  onChange={submitForm.handleChange}
-                  onBlur={submitForm.handleBlur}
-                  value={submitForm.values.appointmentdate} 
-                  type="date"
-                  name="appointmentdate"
-                  min={new Date().toISOString().split("T")[0]}
-                  className={`${base} ${
-                    submitForm.touched.appointmentdate &&
-                    submitForm.errors.appointmentdate
-                      ? invalid
-                      : valid
-                  }`}
-                />
-
-                {submitForm.touched.appointmentdate &&
-                  submitForm.errors.appointmentdate && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {submitForm.errors.appointmentdate}
-                    </p>
-                  )}
-              </div>
-
-              <div>
-                <label
-                  className={`block font-medium mb-2 text-gray-700 dark:text-gray-700`}
-                >
-                  Time Slot <span className="text-red-500">*</span>
-                </label>
-                <select
-                  defaultValue=""
-                  onChange={submitForm.handleChange}
-                  onBlur={submitForm.handleBlur}
-                  value={submitForm.values.timeslot} 
-                  name="timeslot"
-                  className={`${base} ${
-                    submitForm.touched.timeslot && submitForm.errors.timeslot
-                      ? invalid
-                      : valid
-                  }`}
-                >
-                  <option value="" disabled>
-                    Select a time
-                  </option>
-                  {timeSlots.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-
-                {submitForm.touched.timeslot && submitForm.errors.timeslot && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {submitForm.errors.timeslot}
-                  </p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={IsLoading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
-              >
-                {IsLoading ? "Booking..." : "Book Appointment"}
-              </button>
+              <input
+                name="fullname"
+                value={submitForm.values.fullname}
+                onChange={submitForm.handleChange}
+                onBlur={submitForm.handleBlur}
+                className={`${base} ${
+                  submitForm.touched.fullname && submitForm.errors.fullname
+                    ? invalid
+                    : ""
+                }`}
+              />
             </div>
-          </form>
-        </div>
-      </div>
-    </>
+
+            {/* Email */}
+            <div>
+              <label className="block font-medium mb-2">Email Address *</label>
+
+              <input
+                name="email"
+                value={submitForm.values.email}
+                onChange={submitForm.handleChange}
+                onBlur={submitForm.handleBlur}
+                className={`${base} ${
+                  submitForm.touched.email && submitForm.errors.email
+                    ? invalid
+                    : ""
+                }`}
+              />
+            </div>
+
+            {/* Service */}
+            <select
+              name="service"
+              value={submitForm.values.service}
+              onChange={submitForm.handleChange}
+              className={base}
+            >
+              <option value="">Select service</option>
+              {services.map((s) => (
+                <option key={s.id} value={s.name}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Date */}
+            <input
+              type="date"
+              name="appointmentdate"
+              value={submitForm.values.appointmentdate}
+              onChange={submitForm.handleChange}
+              className={base}
+            />
+
+            {/* Time */}
+            <select
+              name="timeslot"
+              value={submitForm.values.timeslot}
+              onChange={submitForm.handleChange}
+              className={base}
+            >
+              <option value="">Select time</option>
+              {timeSlots.map((t) => (
+                <option key={t}>{t}</option>
+              ))}
+            </select>
+
+            {/* Button */}
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              disabled={IsLoading}
+              className="w-full py-3 rounded-lg font-medium
+                         bg-blue-600 text-white
+                         hover:bg-blue-700
+                         dark:bg-blue-500 dark:border dark:hover:bg-blue-600
+                         disabled:bg-gray-400"
+            >
+              {IsLoading ? "Booking..." : "Book Appointment"}
+            </motion.button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
   );
 };
 
