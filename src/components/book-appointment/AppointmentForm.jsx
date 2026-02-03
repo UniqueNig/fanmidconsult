@@ -3,6 +3,7 @@ import * as yup from "yup";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAppointment } from "../../services/api";
+import { motion } from "framer-motion";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
@@ -38,7 +39,7 @@ const AppointmentForm = () => {
         resetForm();
         setIsLoading(false);
 
-         setTimeout(() => setSuccess(false), 9000);
+         setTimeout(() => setSuccess(false), 3000);
       }, 800);
       // createAppointment(values)
       //   .then(() => {
