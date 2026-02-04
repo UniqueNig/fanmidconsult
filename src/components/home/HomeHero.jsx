@@ -1,11 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeHero = () => {
+  let navigate = useNavigate();
   return (
     <>
-      <div
-       className="mx-auto min-h-[410px] px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 gap-0 md:gap-7"
-      >
+      <div className="mx-auto min-h-[410px] px-4 bg-blue-700 shadow-md h-80 flex flex-col items-center justify-center pt-10 gap-0 md:gap-7">
         <h1 className="text-5xl font-bold text-center text-white">
           Transform Your Business Today
         </h1>
@@ -15,7 +15,10 @@ const HomeHero = () => {
           age
         </p>
 
-        <button className="w-40 h-13 bg-white text-blue-700 font-bold py-2 px-6 rounded hover:bg-blue-100 transition md:mb-2 duration-300">
+        <button
+          onClick={() => navigate("/book-appointment")}
+          className="w-40 h-13 bg-white text-blue-700 font-bold py-2 px-6 rounded hover:bg-blue-100 transition md:mb-2 duration-300"
+        >
           Get Started
         </button>
       </div>
