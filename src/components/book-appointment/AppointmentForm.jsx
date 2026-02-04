@@ -113,11 +113,19 @@ const AppointmentForm = () => {
                     : ""
                 }`}
               />
+              {submitForm.touched.fullname && submitForm.errors.fullname && (
+                <p className="mt-1 text-sm text-red-500">
+                  {" "}
+                  {submitForm.errors.fullname}{" "}
+                </p>
+              )}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block font-medium mb-2">Email Address *</label>
+              <label className="block font-medium mb-2">
+                Email Address <span className="text-red-500">*</span>
+              </label>
 
               <input
                 name="email"
@@ -130,44 +138,104 @@ const AppointmentForm = () => {
                     : ""
                 }`}
               />
+              {submitForm.touched.email && submitForm.errors.email && (
+                <p className="mt-1 text-sm text-red-500">
+                  {" "}
+                  {submitForm.errors.email}{" "}
+                </p>
+              )}
             </div>
 
             {/* Service */}
-            <select
-              name="service"
-              value={submitForm.values.service}
-              onChange={submitForm.handleChange}
-              className={base}
-            >
-              <option value="">Select service</option>
-              {services.map((s) => (
-                <option key={s.id} value={s.name}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="block font-medium mb-2">
+                Service <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="service"
+                value={submitForm.values.service}
+                onChange={submitForm.handleChange}
+                onBlur={submitForm.handleBlur}
+                className={`${base} ${
+                  submitForm.touched.service && submitForm.errors.service
+                    ? invalid
+                    : ""
+                }`}
+              >
+                <option value="">Select service</option>
+                {services.map((s) => (
+                  <option key={s.id} value={s.name}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+
+              {submitForm.touched.service && submitForm.errors.service && (
+                <p className="mt-1 text-sm text-red-500">
+                  {" "}
+                  {submitForm.errors.service}{" "}
+                </p>
+              )}
+            </div>
 
             {/* Date */}
-            <input
-              type="date"
-              name="appointmentdate"
-              value={submitForm.values.appointmentdate}
-              onChange={submitForm.handleChange}
-              className={base}
-            />
+            <div>
+              <label className="block font-medium mb-2">
+                Appointment Date <span className="text-red-500">*</span>
+              </label>
+
+              <input
+                type="date"
+                name="appointmentdate"
+                value={submitForm.values.appointmentdate}
+                onChange={submitForm.handleChange}
+                onBlur={submitForm.handleBlur}
+                className={`${base} ${
+                  submitForm.touched.appointmentdate && submitForm.errors.appointmentdate
+                    ? invalid
+                    : ""
+                }`}
+              />
+
+              {submitForm.touched.appointmentdate &&
+                submitForm.errors.appointmentdate && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {" "}
+                    {submitForm.errors.appointmentdate}{" "}
+                  </p>
+                )}
+            </div>
 
             {/* Time */}
-            <select
-              name="timeslot"
-              value={submitForm.values.timeslot}
-              onChange={submitForm.handleChange}
-              className={base}
-            >
-              <option value="">Select time</option>
-              {timeSlots.map((t) => (
-                <option key={t}>{t}</option>
-              ))}
-            </select>
+            <div>
+              <label className="block font-medium mb-2">
+                Time Slot <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="timeslot"
+                value={submitForm.values.timeslot}
+                onChange={submitForm.handleChange}
+                onBlur={submitForm.handleBlur}
+                className={`${base} ${
+                  submitForm.touched.timeslot && submitForm.errors.timeslot
+                    ? invalid
+                    : ""
+                }`}
+              >
+                <option value="">Select time</option>
+                {timeSlots.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+              {submitForm.touched.timeslot && submitForm.errors.timeslot && (
+                <p className="mt-1 text-sm text-red-500">
+                  {" "}
+                  {submitForm.errors.timeslot}{" "}
+                </p>
+              )}
+            </div>
 
             {/* Button */}
             <motion.button
