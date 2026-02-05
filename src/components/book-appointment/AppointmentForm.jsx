@@ -3,10 +3,13 @@ import * as yup from "yup";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { createAppointment } from "../../services/api";
+import { LoaderCircle } from "lucide-react";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   let navigate = useNavigate();
 
   const services = [
@@ -33,13 +36,28 @@ const AppointmentForm = () => {
     onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
 
-      setTimeout(() => {
-        setSuccess(true);
-        resetForm();
-        setIsLoading(false);
+      createAppointment(values)
+        .then((data) => {
+          console.log(data);
 
-        setTimeout(() => setSuccess(false), 3000);
-      }, 800);
+          setSuccess(true);
+          setMessage(data.message); // 👈 from backend
+          resetForm();
+        })
+        .catch((err) => {
+          setSuccess(false);
+
+          // backend error message
+          setMessage(err.response?.data?.message || "Something went wrong");
+        })
+        .finally(() => {
+          setIsLoading(false);
+
+          setTimeout(() => {
+            setMessage("");
+            setSuccess(false);
+          }, 3000);
+        });
     },
 
     validationSchema: yup.object({
@@ -78,18 +96,21 @@ const AppointmentForm = () => {
       >
         <h2 className="text-3xl font-bold mb-6">Book Your Appointment</h2>
 
-        {/* Success message */}
+        {/* backend message */}
         <AnimatePresence>
-          {success && (
+          {message && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mb-4 p-3 rounded-lg text-sm
-                         bg-green-100 text-green-700
-                         dark:bg-green-900/40 dark:text-green-300"
+              className={`mb-4 p-3 rounded-lg text-sm
+        ${
+          success
+            ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+            : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+        }`}
             >
-              Appointment submitted successfully 🎉
+              {message}
             </motion.div>
           )}
         </AnimatePresence>
@@ -192,7 +213,8 @@ const AppointmentForm = () => {
                 onChange={submitForm.handleChange}
                 onBlur={submitForm.handleBlur}
                 className={`${base} ${
-                  submitForm.touched.appointmentdate && submitForm.errors.appointmentdate
+                  submitForm.touched.appointmentdate &&
+                  submitForm.errors.appointmentdate
                     ? invalid
                     : ""
                 }`}
@@ -248,6 +270,7 @@ const AppointmentForm = () => {
                          dark:bg-blue-500 dark:border dark:hover:bg-blue-600
                          disabled:bg-gray-400"
             >
+              {IsLoading && <LoaderCircle className="animate-spin mr-2 inline-block" />}
               {IsLoading ? "Booking..." : "Book Appointment"}
             </motion.button>
           </div>

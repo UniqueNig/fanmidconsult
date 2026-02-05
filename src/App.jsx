@@ -7,9 +7,12 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 import BookAppointment from "./pages/BookAppointment";
 import Success from "./pages/Success";
+import AppointmentTable from "./components/admin/AppointmentTable";
+import LoginAdmin from "./components/admin/LoginAdmin";
+import AdminLayout from "./components/admin/AdminLayout";
 
 const App = () => {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
   return (
     <>
       <Routes>
@@ -40,6 +43,17 @@ const App = () => {
         <Route path="/about-us" element={<About />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/booking-successfull" element={<Success />} />
+        <Route path="/admin/login" element={<LoginAdmin />} />
+        {/* <Route path="/admin/dashboard" element={<AppointmentTable />} /> */}
+
+        {/* Protected Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route
+            path="dashboard"
+            element={<h2>Welcome to Admin Dashboard</h2>}
+          />
+          <Route path="appointments" element={<AppointmentTable />} />
+        </Route>
       </Routes>
     </>
   );
