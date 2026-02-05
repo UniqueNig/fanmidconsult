@@ -43,6 +43,9 @@ const Navbar = () => {
             </NavLink>
             <NavLink to="/contact" className={linkClass}>
               Contact
+            </NavLink>{" "}
+            <NavLink to="/admin/login" className={linkClass}>
+              Admin Login
             </NavLink>
           </div>
 
@@ -67,7 +70,10 @@ const Navbar = () => {
             </Link>
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden dark:text-white mr-5" onClick={() => setOpen(!open)}>
+            <button
+              className="md:hidden dark:text-white mr-5"
+              onClick={() => setOpen(!open)}
+            >
               {open ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
