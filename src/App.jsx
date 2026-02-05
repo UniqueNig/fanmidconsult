@@ -50,7 +50,7 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route
             path="dashboard"
-            element={<h2>Welcome to Admin Dashboard</h2>}
+            element={<h2 className="dark:text-white">Welcome to Admin Dashboard</h2>}
           />
           <Route path="appointments" element={<AppointmentTable />} />
         </Route>

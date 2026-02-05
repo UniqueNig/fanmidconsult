@@ -14,12 +14,12 @@ const AdminLayout = () => {
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-slate-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-800 shadow-md">
+      <aside className="w-37 bg-white dark:bg-slate-800 shadow-md">
         <div className="p-6 text-2xl font-bold text-gray-800 dark:text-white">
           Admin Panel
         </div>
 
-        <nav className="mt-10">
+        <nav className="mt-10 dark:text-white">
           <Link
             to="/admin/dashboard"
             className="block py-2.5 px-6 rounded hover:bg-gray-200 dark:hover:bg-slate-700 transition mb-2"

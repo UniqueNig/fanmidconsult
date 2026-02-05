@@ -55,7 +55,7 @@ const AppointmentTable = () => {
               </tr>
             </thead>
 
-            <tbody className="bg-white dark:bg-slate-800">
+            <tbody className="bg-white dark:text-white dark:bg-slate-800">
               {appointments.map((item) => (
                 <tr
                   key={item._id}
