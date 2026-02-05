@@ -1,12 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5500/api",
+  baseURL: "https://appointment-backend-q9hx.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
 
 // ===============================
 // 🔐 Attach token automatically
@@ -21,13 +20,11 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-
 // ===============================
 // USER (public)
 // ===============================
 export const createAppointment = (data) =>
   API.post("/appointments", data).then((res) => res.data);
-
 
 // ===============================
 // ADMIN (protected)
@@ -37,7 +34,6 @@ export const getAppointments = () =>
 
 export const deleteAppointment = (id) =>
   API.delete(`/appointments/${id}`).then((res) => res.data);
-
 
 // ===============================
 // AUTH
