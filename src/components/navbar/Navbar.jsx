@@ -44,9 +44,9 @@ const Navbar = () => {
             <NavLink to="/contact" className={linkClass}>
               Contact
             </NavLink>{" "}
-            <NavLink to="/admin/login" className={linkClass}>
+            {/* <NavLink to="/admin/login" className={linkClass}>
               Admin Login
-            </NavLink>
+            </NavLink> */}
           </div>
 
           {/* Right Actions */}
