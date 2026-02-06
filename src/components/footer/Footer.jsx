@@ -14,7 +14,7 @@ const Footer = () => {
       <div>
         <footer>
           <div className="shadow-md px-4 bg-slate-800 border-b border-gray-200 dark:border-slate-700">
-            <div className="flex flex-col my-5">
+            <div className="flex flex-col my-5 ml-5">
               <h1 className="font-bold text-2xl mt-15  bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 FanMid Consult
               </h1>
@@ -23,6 +23,7 @@ const Footer = () => {
                 transformation
               </p>
             </div>
+
             <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-gray-400 dark:text-gray-100">
                 <h1 className="font-bold text-white mb-4">Quick Links</h1>
