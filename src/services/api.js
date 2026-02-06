@@ -41,6 +41,9 @@ export const deleteAppointment = (id) =>
 export const adminLogin = (data) =>
   API.post("/admin/login", data).then((res) => res.data);
 
+export const getBookedSlots = (date) =>
+  API.get(`/appointments/slots/${date}`).then((res) => res.data);
+
 export const adminLogout = () => {
   localStorage.removeItem("token");
 };

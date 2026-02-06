@@ -1,15 +1,17 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { createAppointment } from "../../services/api";
+import { createAppointment, getBookedSlots } from "../../services/api";
 import { LoaderCircle } from "lucide-react";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState("");
+  const [bookedSlots, setBookedSlots] = useState([]);
+
   let navigate = useNavigate();
 
   const services = [
@@ -69,6 +71,18 @@ const AppointmentForm = () => {
     }),
   });
 
+  useEffect(() => {
+    if (!submitForm.values.appointmentdate) return;
+
+    getBookedSlots(submitForm.values.appointmentdate)
+      .then((data) => {
+        const slots = data.map((item) => item.timeslot);
+        console.log(slots);
+        setBookedSlots(slots);
+      })
+      .catch(console.log);
+  }, [submitForm.values.appointmentdate]);
+
   /* 🎨 Dark mode friendly styles */
   const base =
     "w-full px-4 py-2 border rounded-lg outline-none transition text-gray-900 bg-white border-gray-300 focus:ring-2 focus:ring-blue-500 " +
@@ -125,6 +139,7 @@ const AppointmentForm = () => {
 
               <input
                 name="fullname"
+                placeholder="Joe Doe"
                 value={submitForm.values.fullname}
                 onChange={submitForm.handleChange}
                 onBlur={submitForm.handleBlur}
@@ -150,6 +165,7 @@ const AppointmentForm = () => {
 
               <input
                 name="email"
+                placeholder="youremail@gmail.com"
                 value={submitForm.values.email}
                 onChange={submitForm.handleChange}
                 onBlur={submitForm.handleBlur}
@@ -208,6 +224,7 @@ const AppointmentForm = () => {
 
               <input
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
                 name="appointmentdate"
                 value={submitForm.values.appointmentdate}
                 onChange={submitForm.handleChange}
@@ -248,7 +265,9 @@ const AppointmentForm = () => {
               >
                 <option value="">Select time</option>
                 {timeSlots.map((t) => (
-                  <option key={t}>{t}</option>
+                  <option key={t} value={t} disabled={bookedSlots.includes(t)}>
+                    {bookedSlots.includes(t) ? `${t} (Booked)` : t}
+                  </option>
                 ))}
               </select>
               {submitForm.touched.timeslot && submitForm.errors.timeslot && (
@@ -270,7 +289,9 @@ const AppointmentForm = () => {
                          dark:bg-blue-500 dark:border dark:hover:bg-blue-600
                          disabled:bg-gray-400"
             >
-              {IsLoading && <LoaderCircle className="animate-spin mr-2 inline-block" />}
+              {IsLoading && (
+                <LoaderCircle className="animate-spin mr-2 inline-block" />
+              )}
               {IsLoading ? "Booking..." : "Book Appointment"}
             </motion.button>
           </div>
