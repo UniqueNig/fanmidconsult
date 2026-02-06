@@ -39,7 +39,7 @@ const AppointmentTable = () => {
     return appointments.filter((item) =>
       `${item.appointmentdate} ${item.timeslot}`
         .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+        .includes(searchTerm.toLowerCase()),
     );
   }, [appointments, searchTerm]);
 
@@ -59,7 +59,10 @@ const AppointmentTable = () => {
     );
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div
+      className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-6
+"
+    >
       <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
         Appointments
       </h2>
@@ -85,8 +88,8 @@ const AppointmentTable = () => {
         <p className="text-gray-500 dark:text-gray-400">No appointments yet</p>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-xl shadow-md">
-            <table className="w-full text-sm text-left">
+          <div className="w-full overflow-x-auto rounded-xl shadow-md bg-white dark:bg-slate-800">
+           <table className="min-w-[700px] w-full text-sm text-left">
               <thead className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200">
                 <tr>
                   {/* ✅ S/N column added */}
