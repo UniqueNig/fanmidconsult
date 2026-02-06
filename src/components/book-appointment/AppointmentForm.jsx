@@ -25,6 +25,9 @@ const AppointmentForm = () => {
     "09:00 AM - 10:00 AM",
     "10:00 AM - 11:00 AM",
     "11:00 AM - 12:00 PM",
+    "1:00 PM - 2:00 PM",
+    "2:00 PM - 3:00 PM",
+    "3:00 PM - 4:00 PM",
   ];
 
   let submitForm = useFormik({
@@ -266,7 +269,7 @@ const AppointmentForm = () => {
                 <option value="">Select time</option>
                 {timeSlots.map((t) => (
                   <option key={t} value={t} disabled={bookedSlots.includes(t)}>
-                    {bookedSlots.includes(t) ? `${t} (Booked)` : t}
+                    {bookedSlots.includes(t) ? `${t} (Booked!!! Pick another time)` : t}
                   </option>
                 ))}
               </select>
