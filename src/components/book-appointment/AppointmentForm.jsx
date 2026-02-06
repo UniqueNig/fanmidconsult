@@ -30,6 +30,8 @@ const AppointmentForm = () => {
     "3:00 PM - 4:00 PM",
   ];
 
+  const today = new Date().toLocaleDateString("en-CA");
+
   let submitForm = useFormik({
     initialValues: {
       fullname: "",
@@ -227,7 +229,7 @@ const AppointmentForm = () => {
 
               <input
                 type="date"
-                min={new Date().toISOString().split("T")[0]}
+                min={today}
                 name="appointmentdate"
                 value={submitForm.values.appointmentdate}
                 onChange={submitForm.handleChange}
@@ -269,7 +271,9 @@ const AppointmentForm = () => {
                 <option value="">Select time</option>
                 {timeSlots.map((t) => (
                   <option key={t} value={t} disabled={bookedSlots.includes(t)}>
-                    {bookedSlots.includes(t) ? `${t} (Booked!!! Pick another time)` : t}
+                    {bookedSlots.includes(t)
+                      ? `${t} (Booked!!! Pick another Time Slot)`
+                      : t}
                   </option>
                 ))}
               </select>
