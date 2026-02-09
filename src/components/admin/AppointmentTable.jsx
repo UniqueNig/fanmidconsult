@@ -125,13 +125,13 @@ const AppointmentTable = () => {
                     <td className="p-3">{item.service}</td>
                     <td className="p-3 text-xs">
                       {item.bookings?.map((b, i) => (
-                        <div key={i}>{b.appointmentdate}</div>
+                        <div key={i}>{b.appointmentdate},</div>
                       ))}
                     </td>
 
                     <td className="p-3 text-xs">
                       {item.bookings?.map((b, i) => (
-                        <div key={i}>{b.timeslot}</div>
+                        <div key={i}>{b.timeslot},</div>
                       ))}
                     </td>
 
