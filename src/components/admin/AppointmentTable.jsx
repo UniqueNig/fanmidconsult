@@ -22,7 +22,6 @@ const AppointmentTable = () => {
       const data = await getAppointments();
       setAppointments(data);
       console.log(appointments);
-
     } catch (err) {
       console.log(err);
       if (err.response?.status === 401) {
@@ -88,7 +87,9 @@ const AppointmentTable = () => {
 
       <p className="font-bold mb-3">
         Total Revenue: ₦
-        {appointments.reduce((a, b) => a + (b.amountPaid || 0), 0).toLocaleString()}
+        {appointments
+          .reduce((a, b) => a + (b.amount || 0), 0)
+          .toLocaleString()}
       </p>
 
       {filteredAppointments.length === 0 ? (
@@ -104,7 +105,7 @@ const AppointmentTable = () => {
                   <th className="p-3">Email</th>
                   <th className="p-3">Service</th>
                   <th className="p-3">Date</th>
-                  <th className="p-3">Time</th>
+                  {/* <th className="p-3">Time</th> */}
                   <th className="p-3">Amount</th>
                   <th className="p-3">Status</th>
                   <th className="p-3">Reference</th>
@@ -125,7 +126,7 @@ const AppointmentTable = () => {
                     <td className="p-3">{item.fullname}</td>
                     <td className="p-3">{item.email}</td>
                     <td className="p-3">{item.service}</td>
-                    <td className="p-3 text-xs">
+                    {/* <td className="p-3 text-xs">
                       {item.bookings?.map((b, i) => (
                         <div key={i}>{b.appointmentdate},</div>
                       ))}
@@ -135,11 +136,18 @@ const AppointmentTable = () => {
                       {item.bookings?.map((b, i) => (
                         <div key={i}>{b.timeslot},</div>
                       ))}
+                    </td> */}
+                    <td className="p-3 text-xs">
+                      {item.bookings?.map((b, i) => (
+                        <div key={i}>
+                          {b.appointmentdate} — {b.timeslot},
+                        </div>
+                      ))}
                     </td>
 
                     {/* ✅ NEW */}
                     <td className="p-3 font-semibold">
-                      ₦{item.amountPaid?.toLocaleString()}
+                      ₦{item.amount?.toLocaleString()}
                     </td>
 
                     <td className="p-3">

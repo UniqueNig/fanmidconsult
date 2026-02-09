@@ -121,7 +121,7 @@ const AppointmentForm = () => {
 
     // ✅ call backend verify endpoint via API.js
     verifyPayment(reference)
-      .then(() => {
+      .then((res) => {
         setSuccess(true);
         setMessage(
           `Payment successful 🎉 Appointment(s) booked for ${res.data.appointment.bookings
