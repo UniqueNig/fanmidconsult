@@ -3,17 +3,23 @@ import * as yup from "yup";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { createAppointment, getBookedSlots } from "../../services/api";
+import {
+  createAppointment,
+  getBookedSlots,
+  initializePayment,
+} from "../../services/api";
 import { LoaderCircle } from "lucide-react";
+import axios from "axios";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [bookings, setBookings] = useState([]); // ✅ NEW multiple days
+  const pricePerDay = 5000; // ✅ NEW (change your price)
 
   let navigate = useNavigate();
-
   const services = [
     { id: 1, name: "General Consultation" },
     { id: 2, name: "Specialist Consultation" },
@@ -40,31 +46,33 @@ const AppointmentForm = () => {
       appointmentdate: "",
       timeslot: "",
     },
-    onSubmit: (values, { resetForm }) => {
-      setIsLoading(true);
+    // =========================
+    // ✅ NEW PAYSTACK FLOW
+    // =========================
+    onSubmit: async (values, { resetForm }) => {
+      if (bookings.length === 0) {
+        setMessage("Please add at least one booking day");
+        return;
+      }
 
-      createAppointment(values)
-        .then((data) => {
-          console.log(data);
+      try {
+        setIsLoading(true);
 
-          setSuccess(true);
-          setMessage(data.message); // 👈 from backend
-          resetForm();
-        })
-        .catch((err) => {
-          setSuccess(false);
-
-          // backend error message
-          setMessage(err.response?.data?.message || "Something went wrong");
-        })
-        .finally(() => {
-          setIsLoading(false);
-
-          setTimeout(() => {
-            setMessage("");
-            setSuccess(false);
-          }, 3000);
+        // 1️⃣ initialize payment
+        const res = await initializePayment({
+          fullname: values.fullname,
+          email: values.email,
+          amount: totalAmount,
+          bookings: selectedDates,
         });
+
+        // redirect to paystack
+        window.location.href = res.authorization_url;
+      } catch (err) {
+        setMessage(err.response?.data?.message || "Payment failed");
+      } finally {
+        setIsLoading(false);
+      }
     },
 
     validationSchema: yup.object({
@@ -72,7 +80,7 @@ const AppointmentForm = () => {
       email: yup.string().required("Email is required").email(),
       service: yup.string().required(),
       appointmentdate: yup.string().required(),
-      timeslot: yup.string().required(),
+      // timeslot: yup.string().required(),
     }),
   });
 
@@ -87,6 +95,28 @@ const AppointmentForm = () => {
       })
       .catch(console.log);
   }, [submitForm.values.appointmentdate]);
+
+  // ==========================
+  // ✅ NEW VERIFY AFTER PAYMENT
+  // ==========================
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const reference = params.get("reference");
+
+    if (!reference) return;
+
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/payments/verify/${reference}`)
+      .then(() => {
+        setSuccess(true);
+        setMessage("Payment successful 🎉 Appointment booked!");
+        setBookings([]);
+        navigate("/"); // or anywhere
+      })
+      .catch(() => {
+        setMessage("Payment verification failed");
+      });
+  }, []);
 
   /* 🎨 Dark mode friendly styles */
   const base =
@@ -251,6 +281,31 @@ const AppointmentForm = () => {
                 )}
             </div>
 
+            {/* ===================== */
+            /* ✅ NEW Add day button  */
+            /* ===================== */}
+
+            {submitForm.values.appointmentdate &&
+              submitForm.values.timeslot && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBookings((prev) => [
+                      ...prev,
+                      {
+                        appointmentdate: submitForm.values.appointmentdate,
+                        timeslot: submitForm.values.timeslot,
+                      },
+                    ]);
+
+                    submitForm.setFieldValue("timeslot", "");
+                  }}
+                  className="text-sm text-blue-600 dark:text-blue-400 underline"
+                >
+                  + Add this day
+                </button>
+              )}
+
             {/* Time */}
             <div>
               <label className="block font-medium mb-2">
@@ -284,6 +339,39 @@ const AppointmentForm = () => {
                 </p>
               )}
             </div>
+
+            {/* ===================== */
+            /* ✅ NEW Selected days   */
+            /* ===================== */}
+
+            {bookings.length > 0 && (
+              <div className="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg space-y-2">
+                <p className="font-medium text-sm">Selected Days:</p>
+
+                {bookings.map((b, i) => (
+                  <div key={i} className="flex justify-between text-sm">
+                    <span>
+                      {b.appointmentdate} — {b.timeslot}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setBookings(bookings.filter((_, index) => index !== i))
+                      }
+                      className="text-red-500"
+                    >
+                      remove
+                    </button>
+                  </div>
+                ))}
+
+                {/* ✅ NEW price */}
+                <p className="font-bold mt-2">
+                  Total: ₦{bookings.length * pricePerDay}
+                </p>
+              </div>
+            )}
 
             {/* Button */}
             <motion.button
