@@ -123,8 +123,17 @@ const AppointmentTable = () => {
                     <td className="p-3">{item.fullname}</td>
                     <td className="p-3">{item.email}</td>
                     <td className="p-3">{item.service}</td>
-                    <td className="p-3">{item.appointmentdate}</td>
-                    <td className="p-3">{item.timeslot}</td>
+                    <td className="p-3 text-xs">
+                      {item.bookings?.map((b, i) => (
+                        <div key={i}>{b.appointmentdate}</div>
+                      ))}
+                    </td>
+
+                    <td className="p-3 text-xs">
+                      {item.bookings?.map((b, i) => (
+                        <div key={i}>{b.timeslot}</div>
+                      ))}
+                    </td>
 
                     {/* ✅ NEW */}
                     <td className="p-3 font-semibold">
