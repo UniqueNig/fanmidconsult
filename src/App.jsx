@@ -10,6 +10,7 @@ import Success from "./pages/Success";
 import AppointmentTable from "./components/admin/AppointmentTable";
 import LoginAdmin from "./components/admin/LoginAdmin";
 import AdminLayout from "./components/admin/AdminLayout";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const App = () => {
   let navigate = useNavigate();
@@ -44,13 +45,16 @@ const App = () => {
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/booking-successfull" element={<Success />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
         {/* <Route path="/admin/dashboard" element={<AppointmentTable />} /> */}
 
         {/* Protected Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route
             path="dashboard"
-            element={<h2 className="dark:text-white">Welcome to Admin Dashboard</h2>}
+            element={
+              <h2 className="dark:text-white">Welcome to Admin Dashboard</h2>
+            }
           />
           <Route path="appointments" element={<AppointmentTable />} />
         </Route>
