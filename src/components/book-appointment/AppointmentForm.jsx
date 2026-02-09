@@ -46,6 +46,8 @@ const AppointmentForm = () => {
       fullname: "",
       email: "",
       service: "",
+      amount: totalAmount, // ✅ NEW
+      bookings,
       appointmentdate: "",
       timeslot: "",
     },
