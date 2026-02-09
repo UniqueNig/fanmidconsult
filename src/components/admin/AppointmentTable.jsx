@@ -20,7 +20,7 @@ const AppointmentTable = () => {
   const fetchAppointments = async () => {
     try {
       const data = await getAppointments();
-      setAppointments(data.reverse()); // show latest first
+      setAppointments(data);
     } catch (err) {
       console.log(err);
       if (err.response?.status === 401) {
