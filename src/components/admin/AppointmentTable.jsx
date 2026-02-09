@@ -20,7 +20,7 @@ const AppointmentTable = () => {
   const fetchAppointments = async () => {
     try {
       const data = await getAppointments();
-      setAppointments(data);
+      setAppointments(data.reverse()); // show latest first
     } catch (err) {
       console.log(err);
       if (err.response?.status === 401) {
@@ -37,7 +37,7 @@ const AppointmentTable = () => {
   ========================== */
   const filteredAppointments = useMemo(() => {
     return appointments.filter((item) =>
-      `${item.appointmentdate} ${item.timeslot}`
+      `${item.appointmentdate} ${item.timeslot} ${item.fullname} ${item.email}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
     );
@@ -73,7 +73,7 @@ const AppointmentTable = () => {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search by date or time..."
+          placeholder="Search by name, email, date or time..."
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -84,21 +84,29 @@ const AppointmentTable = () => {
         />
       </div>
 
+      <p className="font-bold mb-3">
+        Total Revenue: ₦
+        {appointments.reduce((a, b) => a + (b.amount || 0), 0).toLocaleString()}
+      </p>
+
       {filteredAppointments.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No appointments yet</p>
       ) : (
         <>
           <div className="w-full overflow-x-auto rounded-xl shadow-md bg-white dark:bg-slate-800">
-           <table className="min-w-[700px] w-full text-sm text-left">
+            <table className="min-w-[700px] w-full text-sm text-left">
               <thead className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200">
                 <tr>
-                  {/* ✅ S/N column added */}
                   <th className="p-3">S/N</th>
                   <th className="p-3">Name</th>
                   <th className="p-3">Email</th>
                   <th className="p-3">Service</th>
                   <th className="p-3">Date</th>
                   <th className="p-3">Time</th>
+                  <th className="p-3">Amount</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Reference</th>
+                  <th className="p-3">Created</th>
                 </tr>
               </thead>
 
@@ -108,15 +116,43 @@ const AppointmentTable = () => {
                     key={item._id}
                     className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                   >
-                    {/* ✅ Serial number calculation */}
                     <td className="p-3 font-medium">
                       {indexOfFirst + index + 1}
                     </td>
+
                     <td className="p-3">{item.fullname}</td>
                     <td className="p-3">{item.email}</td>
                     <td className="p-3">{item.service}</td>
                     <td className="p-3">{item.appointmentdate}</td>
                     <td className="p-3">{item.timeslot}</td>
+
+                    {/* ✅ NEW */}
+                    <td className="p-3 font-semibold">
+                      ₦{item.amount?.toLocaleString()}
+                    </td>
+
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-bold
+            ${
+              item.paymentStatus === "Paid"
+                ? "bg-green-100 text-green-700"
+                : item.paymentStatus === "Pending"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+            }`}
+                      >
+                        {item.paymentStatus}
+                      </span>
+                    </td>
+
+                    <td className="p-3 text-xs break-all">
+                      {item.paymentReference}
+                    </td>
+
+                    <td className="p-3 text-xs">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>
