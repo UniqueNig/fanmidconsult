@@ -7,9 +7,9 @@ import {
   createAppointment,
   getBookedSlots,
   initializePayment,
+  verifyPayment,
 } from "../../services/api";
 import { LoaderCircle } from "lucide-react";
-import axios from "axios";
 
 const AppointmentForm = () => {
   const [IsLoading, setIsLoading] = useState(false);
@@ -38,6 +38,9 @@ const AppointmentForm = () => {
 
   const today = new Date().toLocaleDateString("en-CA");
 
+  // calculate total
+  const totalAmount = bookings.length * pricePerDay;
+
   let submitForm = useFormik({
     initialValues: {
       fullname: "",
@@ -62,13 +65,22 @@ const AppointmentForm = () => {
         const res = await initializePayment({
           fullname: values.fullname,
           email: values.email,
+          service: values.service,
           amount: totalAmount,
-          bookings: selectedDates,
+          bookings, // send all selected days to backend
+          callback_url: "https://fanmidconsult.vercel.app/payment/success", // optional
         });
 
-        // redirect to paystack
-        window.location.href = res.authorization_url;
+        console.log("Payment initialized:", res);
+
+        // ✅ Redirect user to Paystack checkout page
+        if (res.authorization_url) {
+          window.location.href = res.authorization_url;
+        } else {
+          setMessage("Payment initialization failed. Try again.");
+        }
       } catch (err) {
+        console.error(err);
         setMessage(err.response?.data?.message || "Payment failed");
       } finally {
         setIsLoading(false);
@@ -84,6 +96,7 @@ const AppointmentForm = () => {
     }),
   });
 
+  // fetch booked slots for selected date
   useEffect(() => {
     if (!submitForm.values.appointmentdate) return;
 
@@ -99,24 +112,73 @@ const AppointmentForm = () => {
   // ==========================
   // ✅ NEW VERIFY AFTER PAYMENT
   // ==========================
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const reference = params.get("reference");
 
     if (!reference) return;
 
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/payments/verify/${reference}`)
+    // ✅ call backend verify endpoint via API.js
+    verifyPayment(reference)
       .then(() => {
         setSuccess(true);
-        setMessage("Payment successful 🎉 Appointment booked!");
-        setBookings([]);
-        navigate("/"); // or anywhere
+        setMessage(
+          `Payment successful 🎉 Appointment(s) booked for ${res.data.appointment.bookings
+            .map((b) => `${b.appointmentdate} at ${b.timeslot}`)
+            .join(", ")}`,
+        );
+        setBookings([]); // clear selected days
+        resetForm(); // optional: clear form
+        navigate("/"); // redirect to home or success page
       })
-      .catch(() => {
-        setMessage("Payment verification failed");
+      .catch((err) => {
+        console.error(err);
+        setMessage(
+          err.response?.data?.message || "Payment verification failed ❌",
+        );
       });
-  }, []);
+  }, [navigate]);
+
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   const reference = params.get("reference");
+
+  //   if (!reference) return; // no payment to verify
+
+  //   const verify = async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       const res = await API.get(`/payments/verify/${reference}`);
+
+  //       // Payment verified successfully
+  //       setSuccess(true);
+  //       setMessage(
+  //         `Payment successful 🎉 Appointment(s) booked for ${res.data.appointment.bookings
+  //           .map((b) => `${b.appointmentdate} at ${b.timeslot}`)
+  //           .join(", ")}`,
+  //       );
+
+  //       setBookings([]); // clear selected bookings
+  //       setTimeout(() => navigate("/"), 5000); // redirect after 5s
+  //     } catch (err) {
+  //       setSuccess(false);
+  //       setMessage(
+  //         err.response?.data?.message || "Payment verification failed ❌",
+  //       );
+  //     } finally {
+  //       setIsLoading(false);
+  //       // ✅ Remove reference from URL to avoid re-trigger
+  //       window.history.replaceState(
+  //         {},
+  //         document.title,
+  //         window.location.pathname,
+  //       );
+  //     }
+  //   };
+
+  //   verify();
+  // }, []);
 
   /* 🎨 Dark mode friendly styles */
   const base =

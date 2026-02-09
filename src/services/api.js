@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "https://appointment-backend-q9hx.onrender.com/api",
-  // baseURL: "http://localhost:5000/api",
+  // baseURL: "http://localhost:5500/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -52,3 +52,8 @@ export const adminLogout = () => {
 // ✅ NEW – Paystack initialize
 export const initializePayment = (payload) =>
   API.post("/payments/initialize", payload).then((res) => res.data);
+
+
+// ✅ NEW – Paystack verify
+export const verifyPayment = (reference) =>
+  API.get(`/payments/verify/${reference}`).then((res) => res.data);
