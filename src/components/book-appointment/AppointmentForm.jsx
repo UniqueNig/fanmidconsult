@@ -343,31 +343,6 @@ const AppointmentForm = () => {
                 )}
             </div>
 
-            {/* ===================== */
-            /* ✅ NEW Add day button  */
-            /* ===================== */}
-
-            {submitForm.values.appointmentdate &&
-              submitForm.values.timeslot && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setBookings((prev) => [
-                      ...prev,
-                      {
-                        appointmentdate: submitForm.values.appointmentdate,
-                        timeslot: submitForm.values.timeslot,
-                      },
-                    ]);
-
-                    submitForm.setFieldValue("timeslot", "");
-                  }}
-                  className="text-sm text-blue-600 dark:text-blue-400 underline"
-                >
-                  + Add this day
-                </button>
-              )}
-
             {/* Time */}
             <div>
               <label className="block font-medium mb-2">
@@ -402,6 +377,32 @@ const AppointmentForm = () => {
               )}
             </div>
 
+            
+            {/* ===================== */
+            /* ✅ NEW Add day button  */
+            /* ===================== */}
+
+            {submitForm.values.appointmentdate &&
+              submitForm.values.timeslot && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBookings((prev) => [
+                      ...prev,
+                      {
+                        appointmentdate: submitForm.values.appointmentdate,
+                        timeslot: submitForm.values.timeslot,
+                      },
+                    ]);
+
+                    submitForm.setFieldValue("timeslot", "");
+                  }}
+                  className="text-sm font-bold text-blue-800 dark:text-blue-400 underline"
+                >
+                  + Add this day
+                </button>
+              )}
+
             {/* ===================== */
             /* ✅ NEW Selected days   */
             /* ===================== */}
@@ -421,7 +422,7 @@ const AppointmentForm = () => {
                       onClick={() =>
                         setBookings(bookings.filter((_, index) => index !== i))
                       }
-                      className="text-red-500"
+                      className="text-red-600"
                     >
                       remove
                     </button>
