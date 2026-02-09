@@ -21,6 +21,8 @@ const AppointmentTable = () => {
     try {
       const data = await getAppointments();
       setAppointments(data);
+      console.log(appointments);
+
     } catch (err) {
       console.log(err);
       if (err.response?.status === 401) {
@@ -86,7 +88,7 @@ const AppointmentTable = () => {
 
       <p className="font-bold mb-3">
         Total Revenue: ₦
-        {appointments.reduce((a, b) => a + (b.amount || 0), 0).toLocaleString()}
+        {appointments.reduce((a, b) => a + (b.amountPaid || 0), 0).toLocaleString()}
       </p>
 
       {filteredAppointments.length === 0 ? (
@@ -137,7 +139,7 @@ const AppointmentTable = () => {
 
                     {/* ✅ NEW */}
                     <td className="p-3 font-semibold">
-                      ₦{item.amount?.toLocaleString()}
+                      ₦{item.amountPaid?.toLocaleString()}
                     </td>
 
                     <td className="p-3">
