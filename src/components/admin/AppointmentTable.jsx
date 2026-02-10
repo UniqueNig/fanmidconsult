@@ -68,7 +68,7 @@ const AppointmentTable = () => {
   </h2>
 
   {/* SEARCH BAR */}
-  <div className="mb-4">
+  <div className="mb-4 dark:text-white flex flex-col md:flex-row md:justify-between md:items-center gap-4">
     <input
       type="text"
       placeholder="name, email, service, date or time..."
@@ -82,7 +82,7 @@ const AppointmentTable = () => {
   </div>
 
   {/* TOTAL REVENUE */}
-  <p className="font-bold mb-3">
+  <p className="font-bold mb-3 dark:text-white">
     Total Revenue: ₦
     {appointments.reduce((a, b) => a + (b.amountPaid || 0), 0).toLocaleString()}
   </p>
