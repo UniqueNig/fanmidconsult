@@ -11,6 +11,7 @@ import AppointmentTable from "./components/admin/AppointmentTable";
 import LoginAdmin from "./components/admin/LoginAdmin";
 import AdminLayout from "./components/admin/AdminLayout";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import AdminHome from "./pages/AdminHome";
 
 const App = () => {
   let navigate = useNavigate();
@@ -50,12 +51,7 @@ const App = () => {
 
         {/* Protected Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route
-            path="dashboard"
-            element={
-              <h2 className="dark:text-white">Welcome to Admin Dashboard</h2>
-            }
-          />
+          <Route path="dashboard" element={<AdminHome />} />
           <Route path="appointments" element={<AppointmentTable />} />
         </Route>
       </Routes>

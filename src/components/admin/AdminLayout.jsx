@@ -41,12 +41,8 @@ const AdminLayout = () => {
       >
         <div className="p-6 text-2xl font-bold text-gray-800 dark:text-white flex justify-between items-center">
           Admin Panel
-
           {/* close icon on mobile */}
-          <button
-            className="md:hidden"
-            onClick={() => setIsOpen(false)}
-          >
+          <button className="md:hidden" onClick={() => setIsOpen(false)}>
             <X size={22} />
           </button>
         </div>
@@ -59,13 +55,33 @@ const AdminLayout = () => {
           >
             Dashboard
           </Link>
-
           <Link
             to="/admin/appointments"
             onClick={() => setIsOpen(false)}
             className="block py-2.5 px-6 rounded hover:bg-gray-200 dark:hover:bg-slate-700 transition mb-2"
           >
             Appointments
+          </Link>
+          <Link
+            to="/admin/payments"
+            onClick={() => setIsOpen(false)}
+            className="block py-2.5 px-6 rounded hover:bg-gray-200 dark:hover:bg-slate-700 transition mb-2"
+          >
+            Payments
+          </Link>{" "}
+          <Link
+            to="/admin/customers"
+            onClick={() => setIsOpen(false)}
+            className="block py-2.5 px-6 rounded hover:bg-gray-200 dark:hover:bg-slate-700 transition mb-2"
+          >
+            Customers
+          </Link>{" "}
+          <Link
+            to="/admin/settings"
+            onClick={() => setIsOpen(false)}
+            className="block py-2.5 px-6 rounded hover:bg-gray-200 dark:hover:bg-slate-700 transition mb-2"
+          >
+            Settings
           </Link>
         </nav>
       </aside>
@@ -78,10 +94,7 @@ const AdminLayout = () => {
         <header className="flex justify-between items-center p-4 bg-white dark:text-white dark:bg-slate-800 shadow">
           <div className="flex items-center gap-3">
             {/* hamburger (mobile only) */}
-            <button
-              onClick={() => setIsOpen(true)}
-              className="md:hidden"
-            >
+            <button onClick={() => setIsOpen(true)} className="md:hidden">
               <Menu size={24} />
             </button>
 
