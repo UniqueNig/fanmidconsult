@@ -155,7 +155,7 @@ const AdminHome = () => {
         </h3>
 
         {stats.upcomingToday.length === 0 ? (
-          <p className="text-sm text-gray-500">No appointments today 🎉</p>
+          <p className="text-sm text-gray-500 dark:text-gray-200">No appointments today 🎉</p>
         ) : (
           <div className="space-y-2 text-sm">
             {stats.upcomingToday.map((item, i) => (
@@ -163,8 +163,8 @@ const AdminHome = () => {
                 key={i}
                 className="flex justify-between border-b pb-2 last:border-none"
               >
-                <span className="font-medium">{item.fullname}</span>
-                <span className="text-gray-500">{item.timeslot}</span>
+                <span className="font-medium dark:text-white">{item.fullname}</span>
+                <span className="text-gray-600 dark:text-white">{item.timeslot}</span>
               </div>
             ))}
           </div>
