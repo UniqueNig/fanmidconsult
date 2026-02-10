@@ -75,7 +75,7 @@ const AdminLayout = () => {
       ========================== */}
       <div className="flex-1 flex flex-col">
         {/* Navbar */}
-        <header className="flex justify-between items-center p-4 bg-white dark:bg-slate-800 shadow">
+        <header className="flex justify-between items-center p-4 bg-white dark:text-white dark:bg-slate-800 shadow">
           <div className="flex items-center gap-3">
             {/* hamburger (mobile only) */}
             <button
