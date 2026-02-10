@@ -28,20 +28,56 @@ const AdminHome = () => {
   const today = new Date().toLocaleDateString("en-CA");
 
   const stats = useMemo(() => {
+    const now = new Date();
+
     let todayBookings = 0;
     let revenue = 0;
     let pending = 0;
 
-    appointments.forEach((a) => {
-      // total revenue
-      revenue += a.amountPaid || 0;
+    // ✅ NEW
+    let weeklyRevenue = 0;
+    let monthlyRevenue = 0;
+    let yearlyRevenue = 0;
 
-      // pending
+    const upcomingToday = [];
+
+    appointments.forEach((a) => {
+      const created = new Date(a.createdAt);
+      const amount = a.amountPaid || 0;
+
+      // ---------- existing ----------
+      revenue += amount;
       if (a.paymentStatus === "pending") pending++;
 
-      // today's bookings
+      // ---------- weekly ----------
+      const diffDays =
+        (now - created) / (1000 * 60 * 60 * 24);
+
+      if (diffDays <= 7) weeklyRevenue += amount;
+
+      // ---------- monthly ----------
+      if (
+        created.getFullYear() === now.getFullYear() &&
+        created.getMonth() === now.getMonth()
+      ) {
+        monthlyRevenue += amount;
+      }
+
+      // ---------- yearly ----------
+      if (created.getFullYear() === now.getFullYear()) {
+        yearlyRevenue += amount;
+      }
+
+      // ---------- today bookings ----------
       a.bookings?.forEach((b) => {
-        if (b.appointmentdate === today) todayBookings++;
+        if (b.appointmentdate === today) {
+          todayBookings++;
+
+          upcomingToday.push({
+            fullname: a.fullname,
+            timeslot: b.timeslot,
+          });
+        }
       });
     });
 
@@ -50,6 +86,12 @@ const AdminHome = () => {
       today: todayBookings,
       revenue,
       pending,
+      weeklyRevenue,
+      monthlyRevenue,
+      yearlyRevenue,
+      upcomingToday: upcomingToday.sort((a, b) =>
+        a.timeslot.localeCompare(b.timeslot)
+      ),
     };
   }, [appointments, today]);
 
@@ -61,7 +103,7 @@ const AdminHome = () => {
     );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
 
       {/* Header */}
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -69,28 +111,64 @@ const AdminHome = () => {
       </h2>
 
       {/* =============================
-         ✅ STAT CARDS
+         ✅ ORIGINAL CARDS (unchanged)
       ============================= */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <AdminStatCard
-          title="Total Appointments"
-          value={stats.total}
-        />
+        <AdminStatCard title="Total Appointments" value={stats.total} />
 
-        <AdminStatCard
-          title="Today's Bookings"
-          value={stats.today}
-        />
+        <AdminStatCard title="Today's Bookings" value={stats.today} />
 
         <AdminStatCard
           title="Total Revenue"
           value={`₦${stats.revenue.toLocaleString()}`}
         />
 
+        <AdminStatCard title="Pending Payments" value={stats.pending} />
+      </div>
+
+      {/* =============================
+         ✅ NEW REVENUE CARDS
+      ============================= */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <AdminStatCard
-          title="Pending Payments"
-          value={stats.pending}
+          title="This Week Revenue"
+          value={`₦${stats.weeklyRevenue.toLocaleString()}`}
         />
+
+        <AdminStatCard
+          title="This Month Revenue"
+          value={`₦${stats.monthlyRevenue.toLocaleString()}`}
+        />
+
+        <AdminStatCard
+          title="This Year Revenue"
+          value={`₦${stats.yearlyRevenue.toLocaleString()}`}
+        />
+      </div>
+
+      {/* =============================
+         ✅ TODAY UPCOMING LIST
+      ============================= */}
+      <div className="rounded-2xl shadow-md bg-white dark:bg-slate-800 p-5">
+        <h3 className="font-semibold mb-3 text-gray-800 dark:text-white">
+          Today's Upcoming Appointments
+        </h3>
+
+        {stats.upcomingToday.length === 0 ? (
+          <p className="text-sm text-gray-500">No appointments today 🎉</p>
+        ) : (
+          <div className="space-y-2 text-sm">
+            {stats.upcomingToday.map((item, i) => (
+              <div
+                key={i}
+                className="flex justify-between border-b pb-2 last:border-none"
+              >
+                <span className="font-medium">{item.fullname}</span>
+                <span className="text-gray-500">{item.timeslot}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
