@@ -99,15 +99,17 @@ const AppointmentForm = () => {
   // fetch booked slots for selected date
   useEffect(() => {
     if (!submitForm.values.appointmentdate) return;
-
     getBookedSlots(submitForm.values.appointmentdate)
       .then((data) => {
-        const slots = data.map((item) => item.timeslot);
-        console.log(slots);
+        const slots = data.map((b) => b.timeslot);
+
         setBookedSlots(slots);
       })
       .catch(console.log);
-  }, [submitForm.values.appointmentdate]);
+  }, [
+    submitForm.values.appointmentdate,
+    bookings, // ✅ NEW — THIS is the key addition
+  ]);
 
   // ==========================
   // ✅ NEW VERIFY AFTER PAYMENT
@@ -297,7 +299,9 @@ const AppointmentForm = () => {
                     : ""
                 }`}
               >
-                <option value="">Select service</option>
+                <option value="" disabled>
+                  Select service
+                </option>
                 {services.map((s) => (
                   <option key={s.id} value={s.name}>
                     {s.name}
@@ -360,12 +364,24 @@ const AppointmentForm = () => {
                     : ""
                 }`}
               >
-                <option value="">Select time</option>
+                <option value="" disabled>
+                  Select time
+                </option>
                 {timeSlots.map((t) => (
-                  <option key={t} value={t} disabled={bookedSlots.includes(t)}>
-                    {bookedSlots.includes(t)
-                      ? `${t} (Booked!!! Pick another Time Slot)`
-                      : t}
+                  <option
+                    key={t}
+                    value={t}
+                    disabled={
+                      bookedSlots.includes(t) ||
+                      bookings.some(
+                        (b) =>
+                          b.appointmentdate ===
+                            submitForm.values.appointmentdate &&
+                          b.timeslot === t,
+                      )
+                    }
+                  >
+                    {bookedSlots.includes(t) ? `${t} (Booked!!!)` : t}
                   </option>
                 ))}
               </select>
@@ -377,7 +393,6 @@ const AppointmentForm = () => {
               )}
             </div>
 
-            
             {/* ===================== */
             /* ✅ NEW Add day button  */
             /* ===================== */}

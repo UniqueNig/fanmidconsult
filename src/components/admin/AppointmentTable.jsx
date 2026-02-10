@@ -5,12 +5,9 @@ import { useNavigate } from "react-router-dom";
 const AppointmentTable = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // ✅ NEW
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,8 +17,8 @@ const AppointmentTable = () => {
   const fetchAppointments = async () => {
     try {
       const data = await getAppointments();
+      console.log(data);
       setAppointments(data);
-      console.log(appointments);
     } catch (err) {
       console.log(err);
       if (err.response?.status === 401) {
@@ -33,20 +30,24 @@ const AppointmentTable = () => {
     }
   };
 
-  /* =========================
-     ✅ FILTER (date + time)
-  ========================== */
+  // =========================
+  // ✅ FILTER (search across fullname, email, service, bookings)
+  // =========================
   const filteredAppointments = useMemo(() => {
-    return appointments.filter((item) =>
-      `${item.appointmentdate} ${item.timeslot} ${item.fullname} ${item.email}`
+    return appointments.filter((item) => {
+      const bookingsStr = item.bookings
+        ?.map((b) => `${b.appointmentdate} ${b.timeslot}`)
+        .join(" ") || "";
+
+      return `${item.fullname} ${item.email} ${item.service} ${bookingsStr}`
         .toLowerCase()
-        .includes(searchTerm.toLowerCase()),
-    );
+        .includes(searchTerm.toLowerCase());
+    });
   }, [appointments, searchTerm]);
 
-  /* =========================
-     ✅ PAGINATION
-  ========================== */
+  // =========================
+  // ✅ PAGINATION
+  // =========================
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredAppointments.slice(indexOfFirst, indexOfLast);
@@ -60,21 +61,16 @@ const AppointmentTable = () => {
     );
 
   return (
-    <div
-      className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-6
-"
-    >
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-6">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
         Appointments
       </h2>
 
-      {/* =========================
-         ✅ SEARCH BAR (NEW)
-      ========================== */}
+      {/* SEARCH BAR */}
       <div className="mb-4">
         <input
           type="text"
-          placeholder="name, email, date or time..."
+          placeholder="name, email, service, date or time..."
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -85,6 +81,7 @@ const AppointmentTable = () => {
         />
       </div>
 
+      {/* TOTAL REVENUE */}
       <p className="font-bold mb-3">
         Total Revenue: ₦
         {appointments
@@ -104,11 +101,11 @@ const AppointmentTable = () => {
                   <th className="p-3 w-20">Name</th>
                   <th className="p-3 w-50">Email</th>
                   <th className="p-3 w-20">Service</th>
-                  <th className="p-3 w-50 text-center" colSpan={3}>Date & Time</th>
-                  {/* <th className="p- w-">Time</th> */}
+                  <th className="p-3 w-50 text-center" colSpan={3}>
+                    Date & Time
+                  </th>
                   <th className="p-3 w-20">Amount</th>
                   <th className="p-3 w-15">Status</th>
-                  {/* <th className="p- w-">Reference</th> */}
                   <th className="p-3 w-15">Created</th>
                 </tr>
               </thead>
@@ -119,56 +116,41 @@ const AppointmentTable = () => {
                     key={item._id}
                     className="border-t dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                   >
-                    <td className="p-3 font-medium">
-                      {indexOfFirst + index + 1}
-                    </td>
-
+                    <td className="p-3 font-medium">{indexOfFirst + index + 1}</td>
                     <td className="p-3">{item.fullname}</td>
                     <td className="p-3">{item.email}</td>
                     <td className="p-3">{item.service}</td>
-                    {/* <td className="p-3 text-xs">
-                      {item.bookings?.map((b, i) => (
-                        <div key={i}>{b.appointmentdate},</div>
-                      ))}
-                    </td>
 
-                    <td className="p-3 text-xs">
-                      {item.bookings?.map((b, i) => (
-                        <div key={i}>{b.timeslot},</div>
-                      ))}
-                    </td> */}
+                    {/* BOOKINGS */}
                     <td className="p-5 text-xs text-center truncate whitespace-nowrap" colSpan={3}>
                       {item.bookings?.map((b, i) => (
                         <div key={i}>
-                          {b.appointmentdate} by {b.timeslot},
+                          {b.appointmentdate} at {b.timeslot}
                         </div>
                       ))}
                     </td>
 
-                    {/* ✅ NEW */}
+                    {/* AMOUNT */}
                     <td className="p-3 font-semibold">
                       ₦{item.amountPaid?.toLocaleString()}
                     </td>
 
+                    {/* STATUS */}
                     <td className="p-3">
                       <span
-                        className={`px-2 py-1 rounded text-xs font-bold
-            ${
-              item.paymentStatus === "paid"
-                ? "bg-green-100 text-green-700"
-                : item.paymentStatus === "pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
-            }`}
+                        className={`px-2 py-1 rounded text-xs font-bold ${
+                          item.paymentStatus === "paid"
+                            ? "bg-green-100 text-green-700"
+                            : item.paymentStatus === "pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
                       >
                         {item.paymentStatus}
                       </span>
                     </td>
 
-                    {/* <td className="p-3 text-xs break-all">
-                      {item.paymentReference}
-                    </td> */}
-
+                    {/* CREATED */}
                     <td className="p-3 text-xs">
                       {new Date(item.createdAt).toLocaleDateString()}
                     </td>
@@ -178,9 +160,7 @@ const AppointmentTable = () => {
             </table>
           </div>
 
-          {/* =========================
-             ✅ PAGINATION BUTTONS
-          ========================== */}
+          {/* PAGINATION BUTTONS */}
           <div className="flex justify-center items-center gap-2 mt-6">
             <button
               disabled={currentPage === 1}
