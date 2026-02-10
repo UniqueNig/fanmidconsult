@@ -32,7 +32,7 @@ const AdminLayout = () => {
       <aside
         className={`
           fixed md:static z-50
-          w-64 min-h-screen
+          w-40 min-h-screen
           bg-white dark:bg-slate-800 shadow-md
           transform transition-transform duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"}

@@ -74,7 +74,7 @@ const AppointmentTable = () => {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search by name, email, date or time..."
+          placeholder="name, email, date or time..."
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -97,19 +97,19 @@ const AppointmentTable = () => {
       ) : (
         <>
           <div className="w-full overflow-x-auto rounded-xl shadow-md bg-white dark:bg-slate-800">
-            <table className="min-w-[700px] w-full text-sm text-left">
+            <table className="table-fixed w-full text-sm border-collapse">
               <thead className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200">
                 <tr>
-                  <th className="p-3">S/N</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Service</th>
-                  <th className="p-3">Date</th>
-                  {/* <th className="p-3">Time</th> */}
-                  <th className="p-3">Amount</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Reference</th>
-                  <th className="p-3">Created</th>
+                  <th className="p-3 w-6">S/N</th>
+                  <th className="p-3 w-20">Name</th>
+                  <th className="p-3 w-50">Email</th>
+                  <th className="p-3 w-20">Service</th>
+                  <th className="p-3 w-50 text-center" colSpan={3}>Date & Time</th>
+                  {/* <th className="p- w-">Time</th> */}
+                  <th className="p-3 w-20">Amount</th>
+                  <th className="p-3 w-15">Status</th>
+                  {/* <th className="p- w-">Reference</th> */}
+                  <th className="p-3 w-15">Created</th>
                 </tr>
               </thead>
 
@@ -137,10 +137,10 @@ const AppointmentTable = () => {
                         <div key={i}>{b.timeslot},</div>
                       ))}
                     </td> */}
-                    <td className="p-3 text-xs">
+                    <td className="p-5 text-xs text-center truncate whitespace-nowrap" colSpan={3}>
                       {item.bookings?.map((b, i) => (
                         <div key={i}>
-                          {b.appointmentdate} — {b.timeslot},
+                          {b.appointmentdate} by {b.timeslot},
                         </div>
                       ))}
                     </td>
@@ -165,9 +165,9 @@ const AppointmentTable = () => {
                       </span>
                     </td>
 
-                    <td className="p-3 text-xs break-all">
+                    {/* <td className="p-3 text-xs break-all">
                       {item.paymentReference}
-                    </td>
+                    </td> */}
 
                     <td className="p-3 text-xs">
                       {new Date(item.createdAt).toLocaleDateString()}
