@@ -164,7 +164,7 @@ const AdminHome = () => {
                 className="flex justify-between border-b pb-2 last:border-none"
               >
                 <span className="font-medium dark:text-white">{item.fullname}</span>
-                <span className="text-gray-600 dark:text-white">{item.timeslot}</span>
+                <span className="text-gray-600 dark:text-gray-400">{item.timeslot}</span>
               </div>
             ))}
           </div>
