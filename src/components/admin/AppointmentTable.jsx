@@ -192,7 +192,7 @@ const AppointmentTable = () => {
       </div>
 
       {/* PAGINATION */}
-      <div className="flex justify-center items-center gap-2 mt-6">
+      <div className="flex justify-center dark:text-white items-center gap-2 mt-6">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((p) => p - 1)}
