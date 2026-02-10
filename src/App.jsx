@@ -6,12 +6,13 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import BookAppointment from "./pages/BookAppointment";
-import Success from "./pages/Success";
+import Success from "./pages/Payments";
 import AppointmentTable from "./components/admin/AppointmentTable";
 import LoginAdmin from "./components/admin/LoginAdmin";
 import AdminLayout from "./components/admin/AdminLayout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminHome from "./pages/AdminHome";
+import Payments from "./pages/Payments";
 
 const App = () => {
   let navigate = useNavigate();
@@ -53,6 +54,8 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminHome />} />
           <Route path="appointments" element={<AppointmentTable />} />
+          <Route path="payments" element={<Payments />} />
+
         </Route>
       </Routes>
     </>
